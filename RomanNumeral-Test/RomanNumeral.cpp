@@ -2,6 +2,7 @@
 #include "gtest/gtest.h"
 #include <string>
 #include<array>
+#include<regex>
 
 namespace {
 
@@ -10,14 +11,26 @@ namespace {
 
 }
 
-bool RomanNumeral::validate(int num) {
+bool RomanNumeral::validate(std::string inum) {
 
-	return ((num <= 2000) && (num >= 1));
+	std::regex float_regex("\\.|-|[a-zA-Z]", std::regex_constants::ECMAScript | std::regex_constants::icase);
+	if (std::regex_search(inum, float_regex)) {
+		std::cout << "The entered value is invalid. Please enter a valid integer between 1 and 2000." << std::endl;
+		return false;
+	}
+
+	int num = std::stoi(inum);
+	if (((num > 2000) || (num < 1))) {
+		std::cout << "Please enter a integer between 1 and 2000" << std::endl;
+		return false;
+	}
+
+	return true;
 }
 
-std::string RomanNumeral::int_to_roman(int num)
+std::string RomanNumeral::int_to_roman(std::string strnum)
 {
-
+	int num = std::stoi(strnum);
 	std::string result = "";
 	for (std::size_t i{ 0 }; i < arr_values.size(); ++i)
 	{

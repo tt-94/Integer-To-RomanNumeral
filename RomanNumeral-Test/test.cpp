@@ -1,16 +1,45 @@
 #include "gtest/gtest.h"
 #include "RomanNumeral.h"
 
-TEST(TestIntToRoman, TrueTest_1) {
-	RomanNumeral roman;
-	EXPECT_TRUE(roman.validate(1));
-	EXPECT_EQ("I", roman.int_to_roman(1));
-
+TEST(TestCaseName, FalseTest_1) {
+	RomanNumeral romanNumeral;
+	EXPECT_FALSE(romanNumeral.validate("0"));
 }
 
-TEST(TestIntToRoman, FalseTest_2) {
-	RomanNumeral roman;
-	EXPECT_TRUE(roman.validate(5));
-	EXPECT_NE("I", roman.int_to_roman(5));
-
+TEST(TestCaseName, FalseTest_3) {
+	RomanNumeral romanNumeral;
+	EXPECT_FALSE(romanNumeral.validate("-1.9"));
 }
+TEST(TestCaseName, FalseTest_4) {
+	RomanNumeral romanNumeral;
+	EXPECT_FALSE(romanNumeral.validate("a"));
+}
+
+TEST(TestCaseName, FalseTest_5) {
+	RomanNumeral romanNumeral;
+	EXPECT_FALSE(romanNumeral.validate("2.6"));
+}
+
+TEST(TestCaseName, FalseTest_6) {
+	RomanNumeral romanNumeral;
+	EXPECT_FALSE(romanNumeral.validate("2001"));
+}
+
+TEST(TestCaseName, TrueTest_1) {
+	RomanNumeral romanNumeral;
+	EXPECT_TRUE(romanNumeral.validate("+10"));
+	EXPECT_EQ("X", romanNumeral.int_to_roman("+10"));
+}
+
+
+	TEST(TestCaseName, TrueTest_2) {
+		RomanNumeral romanNumeral;
+		EXPECT_TRUE(romanNumeral.validate("50"));
+		EXPECT_EQ("L", romanNumeral.int_to_roman("50"));
+	}
+
+	TEST(TestCaseName, TrueTest_3) {
+		RomanNumeral romanNumeral;
+		EXPECT_TRUE(romanNumeral.validate("1999"));
+		EXPECT_EQ("MCMXCIX", romanNumeral.int_to_roman("1999"));
+	}
