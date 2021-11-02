@@ -1,21 +1,22 @@
 #include "RomanNumeral.h"
 #include "gtest/gtest.h"
 #include<iostream>
-using namespace std;
 
 int main(int argc, char** argv)
 {
 	::testing::InitGoogleTest(&argc, argv);
+	std::cout << "Enter a numeral between 1 to 2000 to convert into roman numeral : ";
+	int num;
+	std::cin >> num;
 	RomanNumeral romanNumeral; //create an object of Class RomanNumeral
-	cout << "Please enter an integer : ";
-	cin >> romanNumeral.num;
-	if ((romanNumeral.num > 2000) || (romanNumeral.num < 1)) {
-		cout << endl << "Invalid Integer" << endl;
+	if (romanNumeral.validate(num)) {
+		auto result = romanNumeral.int_to_roman(num);
+		std::cout << "Roman Numeral of " << num << " is : " << result << std::endl;
 
 	}
 	else {
 
-		cout << "Roman Numeral of " << romanNumeral.num << " is : " << romanNumeral.IntToRoman(romanNumeral.num) << endl;
+		std::cout << "Invalid Number! ";
 
 	}
 

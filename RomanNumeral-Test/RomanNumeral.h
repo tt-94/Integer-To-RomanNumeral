@@ -7,6 +7,7 @@ class RomanNumeral
 {
 public:
 	int num;
-	string IntToRoman(int num);
+	string int_to_roman(int num);
+	bool validate(int num);
 };
 

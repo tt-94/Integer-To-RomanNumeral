@@ -1,4 +1,2 @@
 ﻿  test.cpp
-C:\Users\tteja\source\repos\RomanNumeral-Test\RomanNumeral-Test\test.cpp(5,2): warning C4002: too many arguments for function-like macro invocation 'ASSERT_FALSE'
-C:\Users\tteja\source\repos\RomanNumeral-Test\RomanNumeral-Test\test.cpp(9,2): warning C4002: too many arguments for function-like macro invocation 'ASSERT_TRUE'
   RomanNumeral-Test.vcxproj -> C:\Users\tteja\source\repos\RomanNumeral-Test\Debug\RomanNumeral-Test.exe
