@@ -1,58 +1,47 @@
 #include "RomanNumeral.h"
 #include<array>
 #include<regex>
-#include "gtest/gtest.h"
+#include<iostream>
+#include<utility>
 
 namespace {
-
-	const std::array<std::string, 13> arr_roman = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
-	const std::array<int, 13> arr_values = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+	const int ARR_SIZE = 13;
+	const std::array<std::string, ARR_SIZE> arr_roman = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
+	const std::array<int, ARR_SIZE> arr_values = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
 
 }
 
 
-bool RomanNumeral::validate(std::string inum) {
-
-	std::regex float_regex("\\.|-|[a-zA-Z]", std::regex_constants::ECMAScript | std::regex_constants::icase);
-	if (std::regex_search(inum, float_regex))
-	{
-		return false;
-	}
+std::pair<bool, int> RomanNumeral::validate(std::string inum) {
 
 	int num = std::stoi(inum);
-	if (((num > 2000) || (num < 1)))
+	std::regex float_regex("^([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1][0-9][0-9][0-9]|2000)$", std::regex_constants::ECMAScript | std::regex_constants::icase);
+	if (std::regex_search(inum, float_regex))
 	{
-		std::cout << "Enter an integer between 1 and 2000 " << std::endl;
-		return false;
+		return { true, num };
 	}
 
-	return true;
+	return { false, -1 };
 }
 
 
 std::string RomanNumeral::int_to_roman(std::string strnum)
 {
-	if (validate(strnum))
+	auto result{ validate(strnum) };
+	if (result.first)
 	{
-		try
+		int num = result.second;
+		std::string result = "";
+		for (std::size_t i{ 0 }; i < arr_values.size(); ++i)
 		{
-			int num = std::stoi(strnum);
-			std::string result = "";
-			for (std::size_t i{ 0 }; i < arr_values.size(); ++i)
+			while (num - arr_values[i] >= 0)
 			{
-				while (num - arr_values[i] >= 0)
-				{
-					result += arr_roman[i];
-					num -= arr_values[i];
-				}
+				result += arr_roman[i];
+				num -= arr_values[i];
 			}
+		}
 
-			return result;
-		}
-		catch (std::exception& e)
-		{
-			
-		}
+		return result;
 	}
 	else
 	{

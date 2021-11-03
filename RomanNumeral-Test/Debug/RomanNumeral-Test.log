@@ -1,6 +1,2 @@
-﻿  Main.cpp
-  RomanNumeral.cpp
-C:\Users\tteja\source\repos\RomanNumeral-Test\RomanNumeral-Test\RomanNumeral.cpp(52,26): warning C4101: 'e': unreferenced local variable
-  test.cpp
-  Generating Code...
+﻿  test.cpp
   RomanNumeral-Test.vcxproj -> C:\Users\tteja\source\repos\RomanNumeral-Test\Debug\RomanNumeral-Test.exe
