@@ -33,66 +33,52 @@ class RomanNumeral
 public:
 	std::string int_to_roman(std::string num);
 private:
-	bool validate(std::string num);
+	std::pair<bool,int> validate(std::string num);
 };
 ```
 
-The C++ header file includes a class `RomanNumeral` consisting of two class methods. The `validate` function is been encapsulated using private access modifiers.
+The C++ header file includes a class `RomanNumeral` consisting of two class methods. The `validate` function is been encapsulated using private access modifiers and returns two datatypes using a class template `std::pair<>`.
 
 ## Function declaration
 
 1. Validate Function
 
 ```cpp
-    bool RomanNumeral::validate(std::string inum) {
-
-	std::regex float_regex("\\.|-|[a-zA-Z]", std::regex_constants::ECMAScript | std::regex_constants::icase);
-	if (std::regex_search(inum, float_regex))
-	{
-		return false;
-	}
+    std::pair<bool, int> RomanNumeral::validate(std::string inum) {
 
 	int num = std::stoi(inum);
-	if (((num > 2000) || (num < 1)))
+	std::regex float_regex("^([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1][0-9][0-9][0-9]|2000)$", std::regex_constants::ECMAScript | std::regex_constants::icase);
+	if (std::regex_search(inum, float_regex))
 	{
-		std::cout << "Enter an integer between 1 and 2000 " << std::endl;
-		return false;
+		return { true, num };
 	}
 
-	return true;
+	return { false, -1 };
 }
-
 ```
 
-The `validate` function accepts input as a string *e.g* `'12'` and performs two checks. A regular expression library function is used for checks that include decimal points, negative integers and other non digit characters and will cause an exception to be thrown for invalid input. Secondly, to limit the range from 1 to 2000, a conditional statement check is used that throws a console output for numbers exceeding the given range. 
+The `validate` function accepts input as a string *e.g* `'12'` and performs checks for validating the user input. A regular expression library function is used for numeric range checks ranging from `1-2000` and will cause an exception to be thrown for invalid inputs that include decimal points, negative integers, special characters and other non digit characters. 
 
 2. Integer to Roman Conversion
 
 ```cpp
-
 std::string RomanNumeral::int_to_roman(std::string strnum)
 {
-	if (validate(strnum))
+	auto result{ validate(strnum) };
+	if (result.first)
 	{
-		try
+		int num = result.second;
+		std::string result = "";
+		for (std::size_t i{ 0 }; i < arr_values.size(); ++i)
 		{
-			int num = std::stoi(strnum);
-			std::string result = "";
-			for (std::size_t i{ 0 }; i < arr_values.size(); ++i)
+			while (num - arr_values[i] >= 0)
 			{
-				while (num - arr_values[i] >= 0)
-				{
-					result += arr_roman[i];
-					num -= arr_values[i];
-				}
+				result += arr_roman[i];
+				num -= arr_values[i];
 			}
+		}
 
-			return result;
-		}
-		catch (std::exception& e)
-		{
-			
-		}
+		return result;
 	}
 	else
 	{
@@ -101,11 +87,11 @@ std::string RomanNumeral::int_to_roman(std::string strnum)
 	return "";
 }
 ```
-The `int_to_roman` function accepts input as string that performs the integer to roman conversion. Before the conversion, `validate` function is called within the function for input check validation and exception handling is implemented  that will cause an exception to be thrown for invalid input.
+The `int_to_roman` function accepts input as string that performs the integer to roman conversion. Before the conversion, `validate` function is called within the function for input check validation and exception handling is implemented  that will cause an exception to be thrown for invalid inputs.
 
 ## Unit Test using Google Test
 
-Unit test cases is written using google test considering all edge cases that include negative integers, decimal points and non digit characters. Fixtures was used for object and input variable declaration. Below are the few false and true test cases that were implemented successfully.
+Unit test cases is written using google test considering all edge cases that include negative integers, decimal points,special characters and non digit characters. Fixtures was used for object and input variable declaration. Below are the few false and true test cases that were implemented successfully.
 
 ```cpp
 class RomanNumeralTests : public ::testing::Test {
@@ -114,40 +100,78 @@ protected:
 	std::string result;
 };
 
-
-TEST_F(RomanNumeralTests, FalseTest_1) {
+TEST_F(RomanNumeralTests, FalseTest_zero) {
 	EXPECT_THROW(romanNumeral.int_to_roman("0"), std::exception);
 }
 
-TEST_F(RomanNumeralTests, FalseTest_2) {
+TEST_F(RomanNumeralTests, FalseTest_decimal) {
 	EXPECT_THROW(romanNumeral.int_to_roman("1.2"), std::exception);
 }
-TEST_F(RomanNumeralTests, FalseTest_3) {
+
+TEST_F(RomanNumeralTests, FalseTest_specialcase) {
+	EXPECT_THROW(romanNumeral.int_to_roman("@"), std::exception);
+}
+
+TEST_F(RomanNumeralTests, FalseTest_negative) {
 	EXPECT_THROW(romanNumeral.int_to_roman("-24"), std::exception);
 }
 
-TEST_F(RomanNumeralTests, FalseTest_4) {
+TEST_F(RomanNumeralTests, FalseTest_alphabet) {
 	EXPECT_THROW(romanNumeral.int_to_roman("a"), std::exception);
 }
 
-TEST_F(RomanNumeralTests, FalseTest_5) {
+TEST_F(RomanNumeralTests, FalseTest_2001) {
 	EXPECT_THROW(romanNumeral.int_to_roman("2001"), std::exception);
 }
 
 
-TEST_F(RomanNumeralTests, TrueTest_1) {
+TEST_F(RomanNumeralTests, TrueTest_firstindex_min_1) {
 	EXPECT_NO_THROW(result = romanNumeral.int_to_roman("1"));
 	EXPECT_EQ("I", result);
 }
 
-TEST_F(RomanNumeralTests, TrueTest_2) {
+TEST_F(RomanNumeralTests, TrueTest_firstindex_max_9) {
+	EXPECT_NO_THROW(result = romanNumeral.int_to_roman("9"));
+	EXPECT_EQ("IX", result);
+}
+TEST_F(RomanNumeralTests, TrueTest_secondindex_min_10) {
+	EXPECT_NO_THROW(result = romanNumeral.int_to_roman("10"));
+	EXPECT_EQ("X", result);
+}
+TEST_F(RomanNumeralTests, TrueTest_secondindex_67) {
 	EXPECT_NO_THROW(result = romanNumeral.int_to_roman("67"));
 	EXPECT_EQ("LXVII", result);
 }
-
-TEST_F(RomanNumeralTests, TrueTest_3) {
+TEST_F(RomanNumeralTests, TrueTest_secondindex_max_99) {
+	EXPECT_NO_THROW(result = romanNumeral.int_to_roman("99"));
+	EXPECT_EQ("XCIX", result);
+}
+TEST_F(RomanNumeralTests, TrueTest_thirdindex_min_100) {
+	EXPECT_NO_THROW(result = romanNumeral.int_to_roman("100"));
+	EXPECT_EQ("C", result);
+}
+TEST_F(RomanNumeralTests, TrueTest_thirdindex_525) {
 	EXPECT_NO_THROW(result = romanNumeral.int_to_roman("525"));
 	EXPECT_EQ("DXXV", result);
 }
-
+TEST_F(RomanNumeralTests, TrueTest_thirdindex_max_999) {
+	EXPECT_NO_THROW(result = romanNumeral.int_to_roman("999"));
+	EXPECT_EQ("CMXCIX", result);
+}
+TEST_F(RomanNumeralTests, TrueTest_fourthindex_min_1000) {
+	EXPECT_NO_THROW(result = romanNumeral.int_to_roman("1000"));
+	EXPECT_EQ("M", result);
+}
+TEST_F(RomanNumeralTests, TrueTest_fourthindex_1500) {
+	EXPECT_NO_THROW(result = romanNumeral.int_to_roman("1500"));
+	EXPECT_EQ("MD", result);
+}
+TEST_F(RomanNumeralTests, TrueTest_fourthindex_max_1999) {
+	EXPECT_NO_THROW(result = romanNumeral.int_to_roman("1999"));
+	EXPECT_EQ("MCMXCIX", result);
+}
+TEST_F(RomanNumeralTests, TrueTest_maxedge_2000) {
+	EXPECT_NO_THROW(result = romanNumeral.int_to_roman("2000"));
+	EXPECT_EQ("MM", result);
+}
 ```
