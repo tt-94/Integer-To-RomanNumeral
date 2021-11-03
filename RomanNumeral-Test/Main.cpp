@@ -1,6 +1,5 @@
 #include "RomanNumeral.h"
-#include<regex>
-#include<string>
+#include<iostream>
 #include "gtest/gtest.h"
 
 int main(int argc, char** argv)
@@ -19,7 +18,7 @@ int main(int argc, char** argv)
 	}
 	catch (const std::exception& e)
 	{
-		std::cout << "Unexpected Error: Entered input is invalid. PLease enter number between 1 to 2000 " << e.what() << std::endl;
+		std::cout << "Unexpected Error: " << e.what() << std::endl;
 	}
 	return RUN_ALL_TESTS();
 }

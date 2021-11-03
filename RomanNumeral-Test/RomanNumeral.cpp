@@ -1,8 +1,7 @@
 #include "RomanNumeral.h"
 #include<array>
 #include<regex>
-#include<iostream>
-#include<utility>
+
 
 namespace {
 	const int ARR_SIZE = 13;
